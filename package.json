@@ -1,0 +1,17 @@
+{
+  "name": "sgf",
+  "private": true,
+  "workspaces": [
+    "sgf-landing",
+    "sgf-food"
+  ],
+  "scripts": {
+    "dev": "concurrently -n group,food -c magenta,yellow \"npm run dev -w sgf-landing\" \"npm run dev -w sgf-food\"",
+    "build": "npm run build -w sgf-landing && npm run build -w sgf-food",
+    "dev:landing": "npm run dev -w sgf-landing",
+    "dev:food": "npm run dev -w sgf-food"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}
