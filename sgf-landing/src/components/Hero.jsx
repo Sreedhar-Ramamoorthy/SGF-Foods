@@ -35,7 +35,9 @@ function Orbit() {
       <div className="ring r2" />
       <div className="ring r3" />
       <div className="core">
-        <b>{GROUP.mark}</b>
+        <span className="core-logo">
+          <img src="/logo.png" alt="" width="120" height="120" />
+        </span>
         <small>Group</small>
       </div>
       <div className="orbit" style={{ '--n': BUSINESSES.length }}>

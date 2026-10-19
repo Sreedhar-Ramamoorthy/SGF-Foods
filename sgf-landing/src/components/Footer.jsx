@@ -14,7 +14,7 @@ export default function Footer() {
         <div className="foot-top">
           <div className="foot-brand">
             <span className="brand-mark">
-              <span>{GROUP.mark}</span>
+              <img src="/logo.png" alt="" width="42" height="42" />
             </span>
             <p>{GROUP.name} — {BUSINESSES.map((b) => b.name.toLowerCase()).join(', ')}. Rooted in Tiruchirappalli, Tamil Nadu.</p>
             <address>

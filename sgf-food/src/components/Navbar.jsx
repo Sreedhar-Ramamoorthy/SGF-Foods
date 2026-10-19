@@ -46,14 +46,17 @@ export default function Navbar() {
         </a>
 
         <a
-          href="#top"
+          href={GROUP_URL}
           className="logo"
           onClick={(e) => {
             e.preventDefault()
-            scrollToId('top')
+            go(GROUP_URL, GROUP_NAME, e)
           }}
+          aria-label={`Sri Gopal Foods — go to ${GROUP_NAME}`}
         >
-          <span className="logo-badge">🍛</span>
+          <span className="logo-badge">
+            <img src="/logo.png" alt="" width="40" height="40" />
+          </span>
           <span className="logo-txt">
             Sri Gopal<em>Foods</em>
           </span>

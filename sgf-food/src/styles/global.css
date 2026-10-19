@@ -369,13 +369,17 @@ em {
 .logo-badge {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 13px;
-  background: var(--orange);
-  font-size: 22px;
-  box-shadow: 0 8px 20px -8px var(--orange);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 0 0 1px var(--line), 0 8px 20px -10px rgba(0, 85, 0, 0.45);
   transition: transform 0.5s var(--ease);
+}
+.logo-badge img {
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
 }
 .logo:hover .logo-badge {
   transform: rotate(-12deg) scale(1.08);
@@ -1934,9 +1938,8 @@ em {
     font-size: 21px;
   }
   .logo-badge {
-    width: 36px;
-    height: 36px;
-    font-size: 19px;
+    width: 42px;
+    height: 42px;
   }
   .cart-btn {
     padding: 12px;

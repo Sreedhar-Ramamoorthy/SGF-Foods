@@ -15,8 +15,10 @@ export default function Footer() {
       <div className="container">
         <div className="ft-grid">
           <div className="ft-brand">
-            <a href="#top" className="logo" onClick={(e) => (e.preventDefault(), scrollToId('top'))}>
-              <span className="logo-badge">🍛</span>
+            <a href={GROUP_URL} className="logo" onClick={toGroup('')} aria-label={`Sri Gopal Foods — go to ${GROUP_NAME}`}>
+              <span className="logo-badge">
+                <img src="/logo.png" alt="" width="40" height="40" />
+              </span>
               <span className="logo-txt">
                 Sri Gopal<em>Foods</em>
               </span>

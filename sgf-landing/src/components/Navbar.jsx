@@ -67,7 +67,7 @@ export default function Navbar({ ready }) {
             }}
           >
             <span className="brand-mark">
-              <span>{GROUP.mark}</span>
+              <img src="/logo.png" alt="" width="42" height="42" />
             </span>
             <span className="brand-name">
               {GROUP.short} <small>Group</small>
