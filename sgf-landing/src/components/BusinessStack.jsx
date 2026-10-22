@@ -1,12 +1,12 @@
-import { Fragment, useRef } from 'react'
-import { motion, useScroll, useTransform } from 'motion/react'
+import { Fragment, useRef, useState } from 'react'
+import { motion, useInView, useMotionValueEvent, useScroll, useTransform } from 'motion/react'
 import { BUSINESSES } from '../data/businesses'
 import { EASE, reveal, scrollToId } from '../lib/motion'
 import { usePageTransition } from './Transition'
 import Magnetic from './Magnetic'
 import Icon from './Icon'
 
-function Panel({ b, i, n, progress }) {
+function Panel({ b, i, n, progress, live }) {
   const ref = useRef(null)
   const go = usePageTransition()
   const range = [i / n, 1]
@@ -27,7 +27,7 @@ function Panel({ b, i, n, progress }) {
 
   return (
     <div ref={ref} className="stack-item">
-      <motion.article className="panel" style={{ scale, top: `calc(-3vh + ${i * 22}px)`, '--c': b.color }}>
+      <motion.article className={`panel ${live ? 'is-live' : ''}`} style={{ scale, top: `calc(-3vh + ${i * 22}px)`, '--c': b.color }}>
         <div className="panel-copy">
           <motion.span className="panel-idx" {...item(0)}>
             0{i + 1} <i /> 0{n}
@@ -117,6 +117,10 @@ export default function BusinessStack() {
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
   const n = BUSINESSES.length
+  const inView = useInView(ref)
+  // Index of the panel currently on top; it and the next one (sliding in) keep their loops running
+  const [active, setActive] = useState(0)
+  useMotionValueEvent(scrollYProgress, 'change', (v) => setActive(Math.min(n - 1, Math.floor(v * (n - 1)))))
 
   return (
     <section className="stack-sec">
@@ -133,7 +137,7 @@ export default function BusinessStack() {
           {BUSINESSES.map((b, i) => (
             <Fragment key={b.id}>
               <span id={b.id} className="anchor" />
-              <Panel b={b} i={i} n={n} progress={scrollYProgress} />
+              <Panel b={b} i={i} n={n} progress={scrollYProgress} live={inView && (i === active || i === active + 1)} />
             </Fragment>
           ))}
         </div>
