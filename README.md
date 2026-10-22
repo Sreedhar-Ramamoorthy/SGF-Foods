@@ -98,6 +98,22 @@ The finished sites are in `sgf-landing/dist/` and `sgf-food/dist/`. Upload each 
 
 The default values point to localhost, which is correct for local development.
 
+### Deploying on Vercel
+
+The two sites are deployed as **two separate Vercel projects** from this one repo. Do not deploy the repo root: it has no website of its own, and Vercel fails with *"No Output Directory named 'public' found"*.
+
+For each site, in Vercel click **Add New → Project**, import this GitHub repo, and set:
+
+| Setting | Landing project | Foods project |
+| --- | --- | --- |
+| Root Directory | `sgf-landing` | `sgf-food` |
+| Framework Preset | Vite | Vite |
+| Environment Variable | `VITE_FOOD_URL` = the Foods site URL | `VITE_GROUP_URL` = the landing site URL |
+
+Build command and output folder (`dist`) are already set by the `vercel.json` in each folder.
+
+Order of steps: deploy both projects once, copy each project's URL (e.g. `https://sgf-food.vercel.app`, without a `/` at the end), add the environment variables above, then click **Redeploy** on both. Without the variables, the Foods link and "Back to Sri Gopal Group" point to localhost.
+
 ## 6. Common problems
 
 | Problem | Fix |
@@ -106,6 +122,8 @@ The default values point to localhost, which is correct for local development.
 | `Port 5173 is already in use` (or 5174) | The sites are already running in another terminal. Use that one, or press Ctrl + C there first. If no terminal is running them, restart your computer or end the `node` processes in Task Manager. |
 | Clicking **Foods** shows "This site can't be reached" | Only the landing page is running. Use `npm run dev` (not `dev:landing`) so both sites run. |
 | Errors after `git pull` | Run `npm install` again. |
+| Vercel: `No Output Directory named "public" found` | The Vercel project points at the repo root. Set **Root Directory** to `sgf-landing` or `sgf-food` (see "Deploying on Vercel"). |
+| Live site: Foods link or "Back" button opens localhost | The `VITE_FOOD_URL` / `VITE_GROUP_URL` variable is missing in Vercel. Add it, then Redeploy. |
 | Something is still broken | Delete the `node_modules` folder and run `npm install` again. |
 
 ## Adding another business website (for developers)
