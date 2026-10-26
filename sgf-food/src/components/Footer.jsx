@@ -1,4 +1,4 @@
-import { COMPANY, GROUP_BUSINESSES, GROUP_NAME, GROUP_URL } from '../data/menu'
+import { COMPANY, GROUP_BUSINESSES, GROUP_NAME, GROUP_URL } from '../data/company'
 import { scrollToId } from '../lib/motion'
 import { usePageTransition } from './Transition'
 import Icon from './Icon'
@@ -23,7 +23,7 @@ export default function Footer() {
                 Sri Gopal<em>Foods</em>
               </span>
             </a>
-            <p>Fresh, hot food from our own kitchen, delivered to your door. Proudly part of {GROUP_NAME}.</p>
+            <p>Potato, banana and tapioca chips, made in Manachanallur, Tiruchirappalli. Proudly part of {GROUP_NAME}.</p>
             <a href={GROUP_URL} className="ft-group" onClick={toGroup('')}>
               <Icon name="back" /> Back to {GROUP_NAME}
             </a>
@@ -32,10 +32,9 @@ export default function Footer() {
             <h4>Explore</h4>
             <ul>
               {[
-                ['menu', 'Menu'],
-                ['specials', 'Combos'],
-                ['how', 'How it works'],
-                ['reviews', 'Reviews'],
+                ['products', 'Our chips'],
+                ['process', "How it's made"],
+                ['contact', 'Contact'],
               ].map(([id, l]) => (
                 <li key={id}>
                   <a href={`#${id}`} onClick={(e) => (e.preventDefault(), scrollToId(id))}>

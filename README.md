@@ -77,11 +77,14 @@ npm run dev
 | --- | --- |
 | Group name, address, business list, colours, taglines | `sgf-landing/src/data/businesses.js` |
 | "About" text and the numbers (stats) | `sgf-landing/src/components/About.jsx` |
-| Foods company name and address, menu, prices, combos, reviews | `sgf-food/src/data/menu.js` |
+| Foods company name, address, tagline | `sgf-food/src/data/company.js` |
+| Foods hero video (the one that zooms on scroll) | Put the file in `sgf-food/public/` (e.g. `hero.mp4`) and set `heroVideo: '/hero.mp4'` in `sgf-food/src/data/company.js`. Until then an animated montage plays. |
+| Chips (potato, banana, tapioca), their colours and the 8 life-cycle steps | `sgf-food/src/data/chips.js` |
+| Life-cycle illustrations | `sgf-food/src/components/art/` |
 | Page titles shown in the browser tab | `index.html` inside each folder |
 | Styles | `src/styles/global.css` inside each folder |
 
-> ⚠️ The Foods menu, prices, combos and reviews, and the landing page stats (years, team size, customers), are **sample content**. Replace them with the client's real details before going live.
+> ⚠️ The chips descriptions and life-cycle steps on the Foods site are the standard chips process, and the landing page stats (years, team size, customers) are **sample content**. Replace them with the client's real details before going live.
 
 ## 5. Build for production
 

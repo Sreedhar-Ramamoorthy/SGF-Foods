@@ -1,41 +1,35 @@
 import { MotionConfig } from 'motion/react'
 import useLenis from './hooks/useLenis'
-import { CartProvider } from './context/Cart'
+import { ChipTypeProvider } from './context/ChipType'
 import { TransitionProvider } from './components/Transition'
 import EnterOverlay from './components/EnterOverlay'
 import GroupBar from './components/GroupBar'
 import Navbar from './components/Navbar'
-import Hero from './components/Hero'
+import HeroZoom from './components/HeroZoom'
 import Tapes from './components/Tapes'
-import Menu from './components/Menu'
-import Specials from './components/Specials'
-import HowItWorks from './components/HowItWorks'
-import Reviews from './components/Reviews'
-import Cta from './components/Cta'
+import Products from './components/Products'
+import Process from './components/Process'
+import Contact from './components/Contact'
 import Footer from './components/Footer'
-import CartDrawer from './components/CartDrawer'
 
 export default function App() {
   useLenis()
   return (
     <MotionConfig reducedMotion="user">
       <TransitionProvider>
-        <CartProvider>
+        <ChipTypeProvider>
           <EnterOverlay />
           <GroupBar />
           <Navbar />
           <main>
-            <Hero />
+            <HeroZoom />
             <Tapes />
-            <Menu />
-            <Specials />
-            <HowItWorks />
-            <Reviews />
-            <Cta />
+            <Products />
+            <Process />
+            <Contact />
           </main>
           <Footer />
-          <CartDrawer />
-        </CartProvider>
+        </ChipTypeProvider>
       </TransitionProvider>
     </MotionConfig>
   )

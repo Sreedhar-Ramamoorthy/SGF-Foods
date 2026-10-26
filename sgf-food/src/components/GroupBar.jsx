@@ -1,4 +1,4 @@
-import { GROUP_BUSINESSES, GROUP_NAME, GROUP_URL } from '../data/menu'
+import { GROUP_BUSINESSES, GROUP_NAME, GROUP_URL } from '../data/company'
 import { usePageTransition } from './Transition'
 import Icon from './Icon'
 

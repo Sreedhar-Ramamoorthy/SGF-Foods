@@ -176,7 +176,7 @@ export default function Hero({ ready }) {
                   go(food.url, { color: food.color, label: food.brand }, e)
                 }}
               >
-                <span>Order from {food.brand}</span>
+                <span>Explore {food.brand}</span>
                 <Icon name="arrow" />
               </a>
             </Magnetic>

@@ -1,4 +1,4 @@
-const WORDS = ['Biryani', 'Dosa', 'Burgers', 'Noodles', 'Pizza', 'Filter Coffee', 'Falooda', 'Chicken 65']
+const WORDS = ['Potato chips', 'Banana chips', 'Tapioca chips', 'Taste the Happiness', 'Made in Trichy', 'Farm to pack']
 
 function Tape({ className, reverse }) {
   const row = WORDS.map((w) => (

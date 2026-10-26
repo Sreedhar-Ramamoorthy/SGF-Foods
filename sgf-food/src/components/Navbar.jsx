@@ -1,23 +1,20 @@
 import { useState } from 'react'
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
-import { GROUP_NAME, GROUP_URL } from '../data/menu'
-import { useCart } from '../context/Cart'
+import { motion, useMotionValueEvent, useScroll } from 'motion/react'
+import { GROUP_NAME, GROUP_URL } from '../data/company'
 import { EASE, ENTER_DELAY, scrollToId } from '../lib/motion'
 import { usePageTransition } from './Transition'
 import Icon from './Icon'
 
 const LINKS = [
-  { id: 'menu', label: 'Menu' },
-  { id: 'specials', label: 'Combos' },
-  { id: 'how', label: 'How it works' },
-  { id: 'reviews', label: 'Reviews' },
+  { id: 'products', label: 'Our chips' },
+  { id: 'process', label: "How it's made" },
+  { id: 'contact', label: 'Contact' },
 ]
 
 export default function Navbar() {
   const { scrollY } = useScroll()
   const [scrolled, setScrolled] = useState(false)
   const [hovered, setHovered] = useState(null)
-  const { count, setOpen, cartBtnRef } = useCart()
   const go = usePageTransition()
 
   useMotionValueEvent(scrollY, 'change', (y) => setScrolled(y > 50))
@@ -79,23 +76,9 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <button ref={cartBtnRef} className="cart-btn" onClick={() => setOpen(true)} aria-label={`Open cart, ${count} items`}>
-          <Icon name="bag" />
-          <span className="cart-txt">Cart</span>
-          <AnimatePresence>
-            {count > 0 && (
-              <motion.span
-                key={count}
-                className="badge"
-                initial={{ scale: 0, y: 6 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 18 }}
-              >
-                {count}
-              </motion.span>
-            )}
-          </AnimatePresence>
+        <button className="nav-cta" onClick={() => scrollToId('process')}>
+          <span className="nav-cta-txt">See how it's made</span>
+          <Icon name="arrow" />
         </button>
       </div>
     </motion.header>

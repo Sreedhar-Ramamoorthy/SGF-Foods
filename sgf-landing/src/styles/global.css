@@ -1797,6 +1797,33 @@ textarea {
   }
 }
 
+/* ============ Lite mode (phones / touch) ============
+   Keep this query in sync with LITE_QUERY in lib/motion.js.
+   Drops effects that repaint every frame on the main thread or blur what scrolls beneath them;
+   transform-only loops (orbit, rings) stay because the GPU runs them. */
+@media (hover: none), (max-width: 760px) {
+  .noise {
+    display: none;
+  }
+  .nav.is-scrolled {
+    background: rgba(7, 7, 11, 0.94);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .hero-eyebrow,
+  .form {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .grad-text,
+  .btn::before,
+  .aurora span,
+  .live-dot,
+  .biz-card.is-live .card-in::before {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

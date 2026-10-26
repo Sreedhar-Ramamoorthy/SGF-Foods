@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { animate, motion, useInView, useMotionValue, useScroll, useTransform } from 'motion/react'
 import { BUSINESSES, COUNT_WORD, byId } from '../data/businesses'
-import { reveal } from '../lib/motion'
+import { LITE, reveal } from '../lib/motion'
 
 // {word|businessId} tokens are highlighted in that business's colour as the text scrubs in.
 const COPY = `Rooted in Tiruchirappalli, Sri Gopal Group builds businesses that {move,|transport} {grow,|farms} {secure,|investments} {feed|food} and {house|realestate} families across Tamil Nadu. ${COUNT_WORD} businesses. One promise — trust, quality and service with heart.`
@@ -18,6 +18,19 @@ function Word({ children, progress, range, color }) {
     <span className="w">
       <motion.span style={{ opacity, y, color }}>{children}</motion.span>
     </span>
+  )
+}
+
+// Lite devices: no per-word scroll scrub (dozens of styles updated every scroll frame)
+function StaticText() {
+  return (
+    <motion.p className="scrub" {...reveal()}>
+      {WORDS.map((w, i) => (
+        <span key={i} className="w">
+          <span style={{ color: w.color }}>{w.text}</span>
+        </span>
+      ))}
+    </motion.p>
   )
 }
 
@@ -64,7 +77,7 @@ export default function About() {
         <motion.p className="eyebrow" {...reveal()}>
           Who we are
         </motion.p>
-        <ScrubText />
+        {LITE ? <StaticText /> : <ScrubText />}
         <div className="stats">
           {STATS.map((s, i) => (
             <motion.div key={s.label} className="stat" {...reveal(i * 0.1)}>

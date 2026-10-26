@@ -1,4 +1,8 @@
 export const EASE = [0.22, 1, 0.36, 1]
+
+// Phones / touch screens get a lighter effect set (see "Lite mode" in global.css)
+export const LITE_QUERY = '(hover: none), (max-width: 760px)'
+export const LITE = typeof matchMedia !== 'undefined' && matchMedia(LITE_QUERY).matches
 export const EASE_IO = [0.76, 0, 0.24, 1]
 
 export const reveal = (delay = 0, y = 40) => ({

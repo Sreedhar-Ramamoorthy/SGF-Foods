@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { motion, useAnimationFrame, useMotionValue, useScroll, useSpring, useTransform, useVelocity } from 'motion/react'
+import { motion, useAnimationFrame, useInView, useMotionValue, useScroll, useSpring, useTransform, useVelocity } from 'motion/react'
 import { BUSINESSES } from '../data/businesses'
 
 const wrap = (min, max, v) => {
@@ -17,8 +17,11 @@ function VelocityRow({ children, baseVelocity, className }) {
   const skewX = useTransform(smooth, [-3000, 3000], [10, -10])
   const x = useTransform(baseX, (v) => `${wrap(-25, 0, v)}%`)
   const dir = useRef(1)
+  const ref = useRef(null)
+  const inView = useInView(ref)
 
   useAnimationFrame((_, delta) => {
+    if (!inView) return
     let move = dir.current * baseVelocity * (delta / 1000)
     const f = factor.get()
     if (f < 0) dir.current = -1
@@ -28,7 +31,7 @@ function VelocityRow({ children, baseVelocity, className }) {
   })
 
   return (
-    <div className={`mq ${className}`}>
+    <div ref={ref} className={`mq ${className}`}>
       <motion.div className="mq-track" style={{ x, skewX }}>
         {[0, 1, 2, 3].map((k) => (
           <span key={k} className="mq-group">
