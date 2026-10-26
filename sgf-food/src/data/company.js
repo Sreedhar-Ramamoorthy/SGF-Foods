@@ -7,8 +7,9 @@ export const COMPANY = {
   tagline: 'Taste the Happiness',
   // Hero video: put the client's video in sgf-food/public (e.g. hero.mp4) and set heroVideo: '/hero.mp4'.
   // While empty, the hero plays an animated montage of the chips life cycle instead.
-  heroVideo: '',
-  heroPoster: '', // optional still image shown while the video loads, e.g. '/hero.jpg'
+  // Current video: stock footage (Pexels, Roman Odintsov, free licence) until the client sends their own.
+  heroVideo: '/hero.mp4',
+  heroPoster: '/hero-poster.jpg', // still image shown while the video loads
   address: ['No: 8/1169, Alagu Nagar, Poonampalayam', 'Manachanallur Tk, Manachanallur Block', 'Tiruchirappalli, Tamil Nadu – 621009'],
   mapUrl:
     'https://www.google.com/maps/search/?api=1&query=' +
