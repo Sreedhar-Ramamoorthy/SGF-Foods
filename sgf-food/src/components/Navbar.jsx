@@ -29,21 +29,6 @@ export default function Navbar() {
       <div className="container nav-inner">
         <a
           href={GROUP_URL}
-          className="back"
-          onClick={(e) => {
-            e.preventDefault()
-            go(GROUP_URL, GROUP_NAME, e)
-          }}
-          aria-label={`Back to ${GROUP_NAME}`}
-        >
-          <span className="back-ic">
-            <Icon name="back" />
-          </span>
-          <span className="back-txt">Sri Gopal Group</span>
-        </a>
-
-        <a
-          href={GROUP_URL}
           className="logo"
           onClick={(e) => {
             e.preventDefault()

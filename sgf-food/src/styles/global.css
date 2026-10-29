@@ -296,35 +296,6 @@ em {
   align-items: center;
   gap: 18px;
 }
-.back {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 14px 6px 6px;
-  border-radius: 999px;
-  border: 1.5px solid var(--line);
-  font-size: 13px;
-  font-weight: 600;
-  transition: border-color 0.3s, background 0.3s;
-}
-.back:hover {
-  border-color: var(--ink);
-  background: #fff;
-}
-.back-ic {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--ink);
-  color: #fff;
-  font-size: 14px;
-  transition: transform 0.4s var(--ease);
-}
-.back:hover .back-ic {
-  transform: translateX(-3px);
-}
 .logo {
   display: inline-flex;
   align-items: center;
@@ -1433,10 +1404,6 @@ em {
   .gb-inner {
     justify-content: center;
   }
-  .back {
-    padding: 4px;
-  }
-  .back-txt,
   .nav-cta-txt {
     display: none;
   }
@@ -1489,10 +1456,6 @@ em {
   .logo-badge {
     width: 36px;
     height: 36px;
-  }
-  .back-ic {
-    width: 26px;
-    height: 26px;
   }
   .nav-cta {
     padding: 10px;
