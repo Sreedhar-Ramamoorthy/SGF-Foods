@@ -7,7 +7,7 @@ import GroupBar from './components/GroupBar'
 import Navbar from './components/Navbar'
 import HeroZoom from './components/HeroZoom'
 import Tapes from './components/Tapes'
-import Products from './components/Products'
+import Journey from './components/Journey'
 import Process from './components/Process'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
@@ -24,7 +24,7 @@ export default function App() {
           <main>
             <HeroZoom />
             <Tapes />
-            <Products />
+            <Journey />
             <Process />
             <Contact />
           </main>

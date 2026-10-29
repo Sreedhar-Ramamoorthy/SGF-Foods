@@ -81,6 +81,7 @@ npm run dev
 | Foods hero "From Farm to Flavour" motion poster (7 video scenes, zooms on scroll) | Scene text and order: `sgf-food/src/data/poster.js`. Clips: `sgf-food/public/motion/` — replace a file with the client's own clip of the same name (720p, 6–9 s, no audio). Current clips are free Pexels stock footage. |
 | Chips (potato, banana, tapioca), their colours and the 8 life-cycle steps | `sgf-food/src/data/chips.js` |
 | Life-cycle illustrations | `sgf-food/src/components/art/` |
+| Farm-to-shelf journey (truck animation under "Three kinds of crunch"): step names, text, stops | `sgf-food/src/components/Journey.jsx` (`STATIONS`) |
 | Page titles shown in the browser tab | `index.html` inside each folder |
 | Styles | `src/styles/global.css` inside each folder |
 
