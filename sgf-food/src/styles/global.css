@@ -862,83 +862,87 @@ em {
 
 /* ============ Journey (farm to shelf) ============ */
 .products {
-  padding: clamp(40px, 6vw, 80px) 0 0;
+  padding: clamp(40px, 6vw, 80px) 0 clamp(60px, 8vw, 110px);
+  /* step text waits 30px to the side before sliding in; keep it from widening the page */
+  overflow-x: clip;
 }
-.products .sec-head {
-  margin-bottom: 0;
-}
-.jn {
-  position: relative;
-}
-.jn-pin {
-  position: sticky;
-  top: 76px;
-  height: calc(100vh - 76px);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.jn-steps {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px 22px;
-  margin-top: 18px;
+.jn-list {
   list-style: none;
+  margin: 0 auto;
 }
-.jn-steps li {
+/* One step fills the screen below the sticky navbar (76px); the next one is a scroll away */
+.jn-step {
   position: relative;
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  align-content: center;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 12px;
+  gap: clamp(24px, 4vw, 64px);
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 96px 0 100px;
+}
+/* ↓ connector to the next step */
+.jn-step:not(:last-child)::after {
+  content: '↓';
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  translate: -50% 0;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   background: var(--bg-2);
   border: 1px solid var(--line);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--muted);
-  transition: background 0.4s, color 0.4s, transform 0.4s var(--ease);
-}
-.jn-steps li span {
-  font: 700 12px/1 var(--fd);
-}
-.jn-steps li:not(:last-child)::after {
-  content: '→';
-  position: absolute;
-  right: -17px;
-  color: var(--muted);
+  color: var(--accent-d);
+  font-size: 22px;
   font-weight: 700;
+  animation: jn-nudge 1.6s ease-in-out infinite;
 }
-.jn-steps li.done {
-  color: var(--ink-2);
+@keyframes jn-nudge {
+  50% {
+    transform: translateY(6px);
+  }
 }
-.jn-steps li.on {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px -12px rgba(15, 134, 207, 0.7);
+.jn-step.rev {
+  grid-template-columns: 1fr 2fr;
 }
-.jn-caption {
-  margin-top: clamp(10px, 2.5vh, 26px);
-  text-align: center;
+.jn-step.rev .jn-scene {
+  order: 2;
 }
-.jn-caption h3 {
-  margin: 4px 0 6px;
-  font: 700 clamp(24px, 2.6vw, 36px)/1.1 var(--fd);
-}
-.jn-caption p {
-  max-width: 560px;
-  margin: 0 auto;
-  color: var(--muted);
-}
-.jn-world {
+.jn-scene {
   position: relative;
-  flex: none;
-  height: min(56vh, 520px);
-  margin-top: auto;
-  will-change: transform;
+  /* as big as the screen allows: full column width, but never taller than the space under the navbar */
+  width: min(100%, calc((100vh - 230px) * 1000 / 520));
+  justify-self: center;
+  aspect-ratio: 1000 / 520;
+  border-radius: 28px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: 0 30px 60px -36px rgba(14, 60, 110, 0.45);
+}
+.jn-num {
+  display: inline-grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: var(--accent);
+  color: #fff;
+  font: 800 20px/1 var(--fd);
+  box-shadow: 0 12px 24px -12px rgba(15, 134, 207, 0.7);
+}
+.jn-copy h3 {
+  margin: 16px 0 10px;
+  font: 700 clamp(26px, 2.8vw, 38px)/1.1 var(--fd);
+  letter-spacing: -0.01em;
+}
+.jn-copy p {
+  max-width: 420px;
+  color: var(--muted);
+  font-size: 17px;
 }
 .jn-svg {
   position: absolute;
@@ -946,13 +950,8 @@ em {
   width: 100%;
   height: 100%;
 }
-/* Wheels touch the road: top = (452 - 93) / 520, height = 100 / 520 of the world */
 .jn-truck {
   position: absolute;
-  left: 0;
-  top: 69%;
-  height: 19.2%;
-  aspect-ratio: 180 / 100;
   will-change: transform;
 }
 .jn-truck svg {
@@ -961,28 +960,50 @@ em {
   height: 100%;
   overflow: visible;
 }
-.jn-world.is-moving .jn-truck-bob {
-  animation: jn-rumble 0.28s ease-in-out infinite;
-}
 .jn-truck-bob {
   width: 100%;
   height: 100%;
+}
+.jn-scene.is-moving .jn-truck-bob {
+  animation: jn-rumble 0.28s ease-in-out infinite;
 }
 @keyframes jn-rumble {
   50% {
     transform: translateY(-1.5%);
   }
 }
-.jn-svg .wheel,
+.jn-scene.is-moving .wheel {
+  animation: jn-spin 0.5s linear infinite;
+}
+@media (max-width: 860px) {
+  .jn-step {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 88px 0 92px;
+  }
+  .jn-step.rev {
+    grid-template-columns: 1fr;
+  }
+  .jn-step.rev .jn-scene {
+    order: 0;
+  }
+  .jn-copy {
+    text-align: center;
+  }
+  .jn-copy p {
+    margin: 0 auto;
+    font-size: 15px;
+  }
+}
 .jn-truck .wheel,
 .jn-svg .loop {
   transform-box: fill-box;
   transform-origin: center;
 }
-.jn-world.is-moving .wheel {
-  animation: jn-spin 0.5s linear infinite;
+/* Only the current station is drawn; its loops run while the truck is parked there */
+.jn-svg .st.off {
+  display: none;
 }
-/* Station loops run only while the truck is parked at that station */
 .jn-svg .st .loop {
   animation-play-state: paused;
 }
@@ -1111,20 +1132,6 @@ em {
   to {
     transform: translateY(-26px) scale(1.1);
     opacity: 0;
-  }
-}
-@media (max-width: 760px) {
-  .jn-steps li:not(.on) {
-    display: none;
-  }
-  .jn-steps li::after {
-    display: none;
-  }
-  .jn-world {
-    height: min(54vh, 460px);
-  }
-  .jn-caption p {
-    font-size: 15px;
   }
 }
 
@@ -1467,6 +1474,71 @@ em {
     background: var(--bg);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+  }
+}
+
+/* Very small phones (≤ 380px, e.g. iPhone SE 1st gen) */
+@media (max-width: 380px) {
+  .nav-inner {
+    gap: 10px;
+  }
+  .logo {
+    gap: 8px;
+    font-size: 18px;
+  }
+  .logo-badge {
+    width: 36px;
+    height: 36px;
+  }
+  .back-ic {
+    width: 26px;
+    height: 26px;
+  }
+  .nav-cta {
+    padding: 10px;
+  }
+}
+
+/* Short screens (landscape phones, small laptop windows) */
+@media (max-height: 560px) {
+  .hz-copy {
+    top: calc(64px + 2vh);
+  }
+  .hz-copy .pill {
+    display: none;
+  }
+  .hz-copy .title {
+    margin: 0 0 6px;
+    font-size: clamp(32px, 11vh, 56px);
+  }
+  .pv-bars {
+    top: calc(40px + 76px);
+  }
+  .pv-text {
+    bottom: calc(40px + 30vh);
+  }
+  .pv-line {
+    font-size: clamp(26px, 9vh, 48px);
+  }
+  .hz-overlay {
+    bottom: calc(40px + 6vh);
+  }
+  .pcard-art {
+    aspect-ratio: auto;
+    height: 62vh;
+  }
+  .proc-pin {
+    top: 64px;
+    height: calc(100vh - 64px);
+  }
+  .proc-stage {
+    height: calc(100vh - 90px);
+  }
+}
+/* single-column journey: keep each scene shorter than the screen */
+@media (max-width: 860px) {
+  .jn-scene {
+    width: min(100%, calc((100vh - 330px) * 1000 / 520));
   }
 }
 

@@ -30,7 +30,14 @@ export default function HeroZoom() {
   // The media box is 80px larger than the screen, so its rounded corners sit off screen at full zoom.
   const [start, setStart] = useState({ scale: 0.56, y: '30vh' })
   useEffect(() => {
-    const set = () => setStart(innerWidth < 700 ? { scale: 0.8, y: '42vh' } : { scale: 0.56, y: '30vh' })
+    const set = () =>
+      setStart(
+        innerHeight < 560 // landscape phones / short windows: smaller card, lower, so the headline stays clear
+          ? { scale: 0.5, y: '56vh' }
+          : innerWidth < 700
+            ? { scale: 0.8, y: '42vh' }
+            : { scale: 0.56, y: '30vh' },
+      )
     set()
     addEventListener('resize', set)
     return () => removeEventListener('resize', set)

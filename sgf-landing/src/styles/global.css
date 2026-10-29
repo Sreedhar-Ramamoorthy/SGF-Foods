@@ -816,7 +816,7 @@ textarea {
 }
 .core small {
   margin-top: 4px;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.35em;
   text-transform: uppercase;
   color: var(--muted);
@@ -1821,6 +1821,41 @@ textarea {
   .live-dot,
   .biz-card.is-live .card-in::before {
     animation: none;
+  }
+}
+
+/* Very small phones (≤ 380px) */
+@media (max-width: 380px) {
+  .stat {
+    padding-right: 12px;
+  }
+  .stat + .stat {
+    padding-left: 12px;
+  }
+  .stat b {
+    font-size: 34px;
+  }
+}
+
+/* Short screens (landscape phones): the stacked panels stop pinning so nothing is cut off */
+@media (max-height: 560px) {
+  .stack-item {
+    position: relative;
+    height: auto;
+    padding: 12px 0;
+  }
+  .panel {
+    height: auto;
+    min-height: 0;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: none;
+  }
+  .panel-visual {
+    order: 0;
+    min-height: 220px;
+  }
+  .panel-list {
+    display: grid;
   }
 }
 

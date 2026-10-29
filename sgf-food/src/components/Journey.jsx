@@ -1,24 +1,33 @@
 import { useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, useMotionValueEvent, useScroll, useTransform } from 'motion/react'
+import { AnimatePresence, motion, useInView } from 'motion/react'
 import { EASE } from '../lib/motion'
 import SectionHead from './SectionHead'
 
-// The world is one wide illustration (2600 × 520 units). The truck parks at each station's `stop`.
-const WORLD_W = 2600
-const WORLD_H = 520
+// Each station is drawn in "world" units (its original spot on one long strip) and shown on its own
+// in a 1000 × 520 scene, centred on `centre`. The truck parks at PARK in scene units.
+const SCENE_W = 1000
+const SCENE_H = 520
 const TRUCK_W = 180
+const TRUCK_H = 100
+const PARK = 330
 
 const STATIONS = [
-  { id: 'farm', stop: 300, label: 'Potato farmers and suppliers', text: 'Fresh potatoes are harvested at the farm and loaded onto the truck.' },
-  { id: 'factory', stop: 820, label: 'Factory processing and quality control', text: 'At the factory they are washed, peeled, sliced and fried, with quality checks along the way.' },
-  { id: 'pack', stop: 1320, label: 'Flavouring, packaging and branding', text: 'The chips are flavoured, sealed in packs and branded Sri Gopal Foods.' },
-  { id: 'dist', stop: 1830, label: 'Distributors and wholesalers', text: 'Distributors and wholesalers stock up and carry the packs onward.' },
-  { id: 'retail', stop: 2330, label: 'Retail shops, supermarkets and consumers', text: 'They reach shops and supermarkets, and finally the people who enjoy them.' },
+  { id: 'farm', centre: 275, label: 'Potato farmers and suppliers', text: 'Fresh potatoes are harvested at the farm and loaded onto the truck.' },
+  { id: 'factory', centre: 870, label: 'Factory processing and quality control', text: 'At the factory they are washed, peeled, sliced and fried, with quality checks along the way.' },
+  { id: 'pack', centre: 1370, label: 'Flavouring, packaging and branding', text: 'The chips are flavoured, sealed in packs and branded Sri Gopal Foods.' },
+  { id: 'dist', centre: 1870, label: 'Distributors and wholesalers', text: 'Distributors and wholesalers stock up and carry the packs onward.' },
+  { id: 'retail', centre: 2375, label: 'Retail shops, supermarkets and consumers', text: 'They reach shops and supermarkets, and finally the people who enjoy them.' },
 ]
+const N = STATIONS.length
 
-// Scroll progress → truck position: park at a station, drive, park at the next...
-const P_IN = [0, 0.08, 0.24, 0.32, 0.48, 0.56, 0.72, 0.8, 0.96, 1]
-const X_OUT = STATIONS.flatMap((s) => [s.stop - TRUCK_W / 2, s.stop - TRUCK_W / 2])
+// What the truck carries: arriving (loaded = false) and after loading/unloading at the station (loaded = true).
+// Empty at the farm until loaded; potatoes into the factory; packed boxes after; empty once delivered.
+function cargoAt(i, loaded) {
+  if (i === 0) return loaded ? 'potatoes' : 'empty'
+  if (i === 1) return loaded ? 'boxes' : 'potatoes'
+  if (i === N - 1) return loaded ? 'empty' : 'boxes'
+  return 'boxes'
+}
 const pad = (i) => String(i + 1).padStart(2, '0')
 
 function Truck({ cargo }) {
@@ -30,7 +39,7 @@ function Truck({ cargo }) {
             <ellipse key={i} cx={x} cy={y} rx="11" ry="8" />
           ))}
         </g>
-      ) : (
+      ) : cargo === 'boxes' ? (
         <g stroke="#a8823f" strokeWidth="1.5">
           {[[4, 20], [42, 20], [80, 20], [22, 2]].map(([x, y], i) => (
             <g key={i}>
@@ -39,7 +48,7 @@ function Truck({ cargo }) {
             </g>
           ))}
         </g>
-      )}
+      ) : null}
       <rect x="0" y="40" width="118" height="36" rx="5" fill="#38b6f5" stroke="#0e2a47" strokeWidth="2.5" />
       <image href="/logo.png" x="8" y="44" width="28" height="28" />
       <text x="77" y="63" textAnchor="middle" fontFamily="Inter, sans-serif" fontWeight="800" fontSize="12" letterSpacing="0.5" fill="#fff">
@@ -87,11 +96,11 @@ function MiniPack({ x, y, color, s = 1, className = '' }) {
   )
 }
 
-/** The whole landscape. Each station's little loops only run while the truck is parked there. */
-function World({ active }) {
-  const on = (i) => `st ${active === i ? 'on' : ''}`
+/** One scene: shared sky, ground and road, plus the active station, which rises in as the previous one leaves. */
+function World({ index, parked }) {
+  const on = (i) => `st ${i === index ? (parked ? 'on' : '') : 'off'}`
   return (
-    <svg className="jn-svg" viewBox={`0 0 ${WORLD_W} ${WORLD_H}`} preserveAspectRatio="xMinYMax meet" aria-hidden="true">
+    <svg className="jn-svg" viewBox={`${VIEW.x} ${VIEW.y} ${VIEW.w} ${VIEW.h}`} preserveAspectRatio="none" aria-hidden="true">
       <defs>
         <linearGradient id="jn-sky" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#ffffff" />
@@ -99,22 +108,31 @@ function World({ active }) {
           <stop offset="1" stopColor="#c4e8ff" />
         </linearGradient>
       </defs>
-      <rect width={WORLD_W} height={WORLD_H} fill="url(#jn-sky)" />
-      <circle cx="190" cy="90" r="38" fill="#ffe08a" />
-      {[[520, 70], [1150, 50], [1700, 90], [2250, 60]].map(([x, y], i) => (
+      <rect x="-2000" width="5000" height={SCENE_H} fill="url(#jn-sky)" />
+      <circle cx="230" cy="160" r="30" fill="#ffe08a" />
+      {[[360, 140], [690, 120]].map(([x, y], i) => (
         <path key={i} d={`M${x},${y} a16,16 0 0 1 30,-8 a20,20 0 0 1 36,6 a13,13 0 0 1 2,26 h-64 a13,13 0 0 1 -4,-24z`} fill="#fff" opacity="0.95" />
       ))}
-      <path d="M0,340 C300,262 600,312 900,292 C1300,262 1600,330 2000,300 C2300,282 2500,312 2600,300 V420 H0Z" fill="#d7eef6" />
-      <rect y="380" width={WORLD_W} height="140" fill="#c9e8b0" />
-      <rect y="414" width={WORLD_W} height="6" fill="#e7eef5" />
-      <rect y="420" width={WORLD_W} height="52" fill="#a9bccf" />
-      <path d={`M0,446 H${WORLD_W}`} stroke="#fff" strokeWidth="4" strokeDasharray="30 22" />
-      <rect y="472" width={WORLD_W} height="48" fill="#b5dd97" />
-      {[570, 1135, 1625, 2125].map((x) => (
+      <path d="M-2000,320 C-1000,300 -200,330 0,340 C200,280 400,312 600,296 C800,280 900,318 1000,304 C1400,290 2200,320 3000,310 V420 H-2000Z" fill="#d7eef6" />
+      <rect x="-2000" y="380" width="5000" height="140" fill="#c9e8b0" />
+      <rect x="-2000" y="414" width="5000" height="6" fill="#e7eef5" />
+      <rect x="-2000" y="420" width="5000" height="52" fill="#a9bccf" />
+      <path d="M-2000,446 H3000" stroke="#fff" strokeWidth="4" strokeDasharray="30 22" />
+      <rect x="-2000" y="472" width="5000" height="48" fill="#b5dd97" />
+      {[190, 810].map((x) => (
         <Tree key={x} x={x} s={0.9} />
       ))}
 
-      {/* 01 Farm */}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.g
+          key={index}
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -30 }}
+          transition={{ duration: 0.5, ease: EASE }}
+        >
+          <g transform={`translate(${SCENE_W / 2 - STATIONS[index].centre} 0)`}>
+      {/* 01 Farm */}      {/* 01 Farm */}
       <g className={on(0)}>
         <rect x="40" y="300" width="470" height="104" rx="12" fill="#a97c50" />
         {[0, 1, 2].map((r) => (
@@ -293,52 +311,75 @@ function World({ active }) {
           <path className="loop heart" d="M0,-92 c-6,-8 -16,-2 -10,6 l10,9 l10,-9 c6,-8 -4,-14 -10,-6z" fill="#ff5c8a" />
         </g>
       </g>
+          </g>
+        </motion.g>
+      </AnimatePresence>
     </svg>
   )
 }
 
-/** Farm-to-shelf journey: the stage pins while scrolling; a truck drives past each station of the supply chain. */
-export default function Journey() {
+// Each card shows this window of the 1000 × 520 scene (same 1000:520 shape as the card, zoomed in on the station)
+const VIEW = { x: 120, y: 90, w: 760, h: (760 * SCENE_H) / SCENE_W }
+// Truck parked at PARK (wheels on the road, top at y 359), as CSS percentages of the card
+const pct = (v, of) => `${(v / of) * 100}%`
+const TRUCK_BOX = { left: pct(PARK - VIEW.x, VIEW.w), top: pct(359 - VIEW.y, VIEW.h), width: pct(TRUCK_W, VIEW.w), height: pct(TRUCK_H, VIEW.h) }
+// start just off the card's left edge, in % of the truck's own width
+const TRUCK_OFF = `-${((PARK - VIEW.x + TRUCK_W + 20) / TRUCK_W) * 100}%`
+
+/** One step: its scene rises into view, the truck drives in and parks, then loads or unloads. */
+function Step({ st, i }) {
   const ref = useRef(null)
-  const worldRef = useRef(null)
-  const stageRef = useRef(null)
-  const { scrollYProgress: p } = useScroll({ target: ref, offset: ['start start', 'end end'] })
-  const truckX = useTransform(p, P_IN, X_OUT)
-
-  // world size in px (the world is laid out by CSS; we only read it)
-  const [dims, setDims] = useState({ scale: 1, worldW: WORLD_W, viewW: 1200 })
+  const inView = useInView(ref, { amount: 0.6 })
+  const [stage, setStage] = useState('away') // away → arriving → parked → loaded
   useEffect(() => {
-    const measure = () => {
-      const h = worldRef.current?.offsetHeight || WORLD_H
-      const scale = h / WORLD_H
-      setDims({ scale, worldW: WORLD_W * scale, viewW: stageRef.current?.offsetWidth || innerWidth })
-    }
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(stageRef.current)
-    return () => ro.disconnect()
-  }, [])
+    if (inView && stage === 'away') setStage('arriving')
+    // left the screen: reset, so the truck drives in again next time this step comes into view
+    if (!inView && stage !== 'away') setStage('away')
+    if (stage !== 'parked') return
+    const id = setTimeout(() => setStage('loaded'), 900)
+    return () => clearTimeout(id)
+  }, [inView, stage])
 
-  const truckPx = useTransform(truckX, (x) => x * dims.scale)
-  const camX = useTransform(truckX, (x) => {
-    const centre = (x + TRUCK_W / 2) * dims.scale
-    return -Math.max(0, Math.min(dims.worldW - dims.viewW, centre - dims.viewW * 0.5))
-  })
+  const parked = stage === 'parked' || stage === 'loaded'
+  return (
+    <li ref={ref} className={`jn-step ${i % 2 ? 'rev' : ''}`} data-snap>
+      <motion.div
+        className={`jn-scene ${stage === 'arriving' ? 'is-moving' : ''}`}
+        initial={{ opacity: 0, y: 60 }}
+        animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
+        transition={{ duration: 0.8, ease: EASE }}
+      >
+        <World index={i} parked={parked && inView} />
+        <motion.div
+          className="jn-truck"
+          style={TRUCK_BOX}
+          initial={{ x: TRUCK_OFF }}
+          animate={{ x: stage === 'away' ? TRUCK_OFF : '0%' }}
+          transition={{ duration: 1.4, ease: [0.33, 1, 0.68, 1] }}
+          onAnimationComplete={() => stage === 'arriving' && setStage('parked')}
+        >
+          <div className="jn-truck-bob">
+            <Truck cargo={cargoAt(i, stage === 'loaded')} />
+          </div>
+        </motion.div>
+      </motion.div>
 
-  const [active, setActive] = useState(0)
-  const [moving, setMoving] = useState(false)
-  useMotionValueEvent(truckX, 'change', (x) => {
-    let best = 0
-    STATIONS.forEach((s, i) => {
-      if (Math.abs(s.stop - TRUCK_W / 2 - x) < Math.abs(STATIONS[best].stop - TRUCK_W / 2 - x)) best = i
-    })
-    setActive(best)
-    setMoving(!STATIONS.some((s) => Math.abs(s.stop - TRUCK_W / 2 - x) < 1))
-  })
-  // potatoes from the farm up to the factory; boxes of packed chips once it drives off from there
-  const cargo = truckX.get() <= STATIONS[1].stop - TRUCK_W / 2 + 0.5 ? 'potatoes' : 'boxes'
-  const s = STATIONS[active]
+      <motion.div
+        className="jn-copy"
+        initial={{ opacity: 0, x: i % 2 ? -30 : 30 }}
+        animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: i % 2 ? -30 : 30 }}
+        transition={{ duration: 0.8, ease: EASE, delay: 0.15 }}
+      >
+        <span className="jn-num">{pad(i)}</span>
+        <h3>{st.label}</h3>
+        <p>{st.text}</p>
+      </motion.div>
+    </li>
+  )
+}
 
+/** Farm-to-shelf journey: five full-screen steps one below the other. Scrolling snaps to the next step (see useLenis) and its animation plays. */
+export default function Journey() {
   return (
     <section className="products" id="products">
       <div className="container">
@@ -352,39 +393,11 @@ export default function Journey() {
           sub="Follow the journey: from the potato farm, through our factory, all the way to the shop near you."
           center
         />
-      </div>
-      <div ref={ref} className="jn" style={{ height: `${STATIONS.length * 90}vh` }}>
-        <div ref={stageRef} className="jn-pin">
-          <ol className="jn-steps container">
-            {STATIONS.map((st, i) => (
-              <li key={st.id} className={i === active ? 'on' : i < active ? 'done' : ''}>
-                <span>{pad(i)}</span>
-                {st.label}
-              </li>
-            ))}
-          </ol>
-
-          <motion.div ref={worldRef} className={`jn-world ${moving ? 'is-moving' : ''}`} style={{ x: camX, width: dims.worldW }}>
-            <World active={moving ? -1 : active} />
-            <motion.div className="jn-truck" style={{ x: truckPx }}>
-              <div className="jn-truck-bob">
-                <Truck cargo={cargo} />
-              </div>
-            </motion.div>
-          </motion.div>
-
-          <div className="jn-caption container">
-            <AnimatePresence mode="wait">
-              <motion.div key={s.id} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: EASE }}>
-                <span className="pc-num">
-                  Step {active + 1} of {STATIONS.length}
-                </span>
-                <h3>{s.label}</h3>
-                <p>{s.text}</p>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
+        <ol className="jn-list">
+          {STATIONS.map((st, i) => (
+            <Step key={st.id} st={st} i={i} />
+          ))}
+        </ol>
       </div>
     </section>
   )
