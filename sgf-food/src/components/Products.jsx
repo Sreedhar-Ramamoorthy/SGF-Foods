@@ -27,7 +27,7 @@ export default function Products() {
             <motion.article
               key={t.id}
               className="prod"
-              style={{ '--tint': t.c.tint, '--accent': t.c.pack }}
+              style={{ '--tint': t.c.tint }}
               initial={{ opacity: 0, y: 60 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-10% 0px' }}

@@ -1,62 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, useInView, useScroll, useTransform } from 'motion/react'
-import { CHIPS, STEPS } from '../data/chips'
+import { motion, useInView, useScroll, useTransform } from 'motion/react'
 import { COMPANY } from '../data/company'
 import { EASE, ENTER_DELAY, scrollToId } from '../lib/motion'
-import { SCENES } from './art/Scenes'
+import MotionPoster from './MotionPoster'
 import Magnetic from './Magnetic'
 import Icon from './Icon'
 
-const CLIP_MS = 3200
-const pad = (i) => String(i + 1).padStart(2, '0')
-
-/**
- * Stand-in "footage" until the client's video arrives: the 8 life-cycle scenes cut one after another
- * like a film, each with a slow Ken Burns zoom. The chip type changes after every full cycle.
- */
-function Montage({ play }) {
-  const [n, setN] = useState(0)
-  useEffect(() => {
-    if (!play) return
-    const id = setInterval(() => setN((v) => v + 1), CLIP_MS)
-    return () => clearInterval(id)
-  }, [play])
-  const i = n % STEPS.length
-  const t = CHIPS[Math.floor(n / STEPS.length) % CHIPS.length]
-  const s = STEPS[i]
-  const Scene = SCENES[s.id]
-
-  return (
-    <div className="montage">
-      <AnimatePresence initial={false}>
-        <motion.div
-          key={n}
-          className="mt-clip"
-          initial={{ opacity: 0, scale: 1.12 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ opacity: { duration: 0.6 }, scale: { duration: CLIP_MS / 1000 + 0.6, ease: 'linear' } }}
-        >
-          <Scene t={t} play={play} />
-        </motion.div>
-      </AnimatePresence>
-      <div className="mt-bars" aria-hidden="true">
-        {STEPS.map((x, k) => (
-          <span key={x.id}>
-            <i className={k < i ? 'full' : k === i && play ? 'run' : ''} key={k === i ? n : x.id} style={{ animationDuration: `${CLIP_MS}ms` }} />
-          </span>
-        ))}
-      </div>
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div key={n} className="mt-cap" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.35 }}>
-          <b>{pad(i)}</b> {s.label} · {t.title}
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  )
-}
-
-/** The client's video, once COMPANY.heroVideo is set (e.g. '/hero.mp4' placed in sgf-food/public). */
+/** A single client video instead of the poster, once COMPANY.heroVideo is set (e.g. '/hero.mp4' in sgf-food/public). */
 function Video({ play }) {
   const ref = useRef(null)
   useEffect(() => {
@@ -119,12 +69,12 @@ export default function HeroZoom() {
             <span className="pill-star">✦</span> {COMPANY.tagline}
           </motion.span>
           <h1 className="title">
-            {line('Every crunch starts', 0)}
+            {line('From farm', 0)}
             {line(
               <>
-                on the{' '}
+                to{' '}
                 <span className="mark">
-                  farm.
+                  flavour.
                   <svg viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true">
                     <motion.path
                       d="M3 14 C 50 4, 120 4, 197 12"
@@ -139,20 +89,15 @@ export default function HeroZoom() {
             )}
           </h1>
           <motion.p className="hz-scroll" {...fade(0.5)}>
-            Scroll to watch it happen <Icon name="arrow" />
+            Scroll to watch the story <Icon name="arrow" />
           </motion.p>
         </motion.div>
 
         <motion.div className="hz-media" style={{ scale, y: mediaY }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: ENTER_DELAY + 0.3 }}>
           <motion.div className="hz-inner" style={{ scale: innerScale }}>
-            {COMPANY.heroVideo ? <Video play={inView} /> : <Montage play={inView} />}
+            {COMPANY.heroVideo ? <Video play={inView} /> : <MotionPoster play={inView} />}
           </motion.div>
-          <motion.div className="hz-shade" style={{ opacity: overlayOpacity }} />
           <motion.div className="hz-overlay" style={{ opacity: overlayOpacity, y: overlayY }}>
-            <h2>
-              From the farm to <em>your hands</em>.
-            </h2>
-            <p>Potato, banana and tapioca chips from Sri Gopal Foods, made in Manachanallur, Tiruchirappalli.</p>
             <div className="hz-actions">
               <Magnetic>
                 <button className="btn" onClick={() => scrollToId('process')}>

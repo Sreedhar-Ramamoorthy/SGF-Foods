@@ -7,7 +7,7 @@ export const CHIPS = [
     title: 'Potato Chips',
     raw: 'potatoes',
     desc: 'Made from fresh potatoes, sliced into thin rounds and fried golden.',
-    c: { skin: '#c99a5b', skinDark: '#9c7038', flesh: '#f6e3a6', fleshDark: '#e2c77c', chip: '#f4b740', chipDark: '#d98a1c', pack: '#ff7a45', packDark: '#e2551f', tint: '#fff0dc' },
+    c: { skin: '#c99a5b', skinDark: '#9c7038', flesh: '#f6e3a6', fleshDark: '#e2c77c', chip: '#f4b740', chipDark: '#d98a1c', pack: '#ff7a45', packDark: '#e2551f', tint: '#eaf6ff' },
   },
   {
     id: 'banana',
@@ -15,7 +15,7 @@ export const CHIPS = [
     title: 'Banana Chips',
     raw: 'raw bananas',
     desc: 'Made from raw bananas, sliced into thin rounds and fried crisp.',
-    c: { skin: '#76a640', skinDark: '#4e7a24', flesh: '#f3ead0', fleshDark: '#ddd0a6', chip: '#f7cf4a', chipDark: '#d9a21c', pack: '#3f9d4a', packDark: '#2c7a36', tint: '#eef7dc' },
+    c: { skin: '#76a640', skinDark: '#4e7a24', flesh: '#f3ead0', fleshDark: '#ddd0a6', chip: '#f7cf4a', chipDark: '#d9a21c', pack: '#3f9d4a', packDark: '#2c7a36', tint: '#e6f7fb' },
   },
   {
     id: 'tapioca',
@@ -23,7 +23,7 @@ export const CHIPS = [
     title: 'Tapioca Chips',
     raw: 'tapioca roots',
     desc: 'Made from tapioca (maravalli kizhangu) roots, sliced thin and fried crisp.',
-    c: { skin: '#8a5a3a', skinDark: '#5f3b22', flesh: '#fbf3df', fleshDark: '#c9b07a', chip: '#f1dca6', chipDark: '#c9a45e', pack: '#c4452f', packDark: '#9c301e', tint: '#f7ece2' },
+    c: { skin: '#8a5a3a', skinDark: '#5f3b22', flesh: '#fbf3df', fleshDark: '#c9b07a', chip: '#f1dca6', chipDark: '#c9a45e', pack: '#c4452f', packDark: '#9c301e', tint: '#eef3ff' },
   },
 ]
 

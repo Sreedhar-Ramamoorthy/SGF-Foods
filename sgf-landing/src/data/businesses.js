@@ -50,7 +50,7 @@ export const BUSINESSES = [
     id: 'food',
     name: 'Foods',
     brand: 'Sri Gopal Foods',
-    color: '#ff7a45',
+    color: '#38b6f5',
     icon: 'food',
     word: 'snacks',
     tagline: 'Potato, banana and tapioca chips, made in Trichy.',

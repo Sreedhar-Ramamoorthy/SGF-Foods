@@ -17,7 +17,7 @@ function TypeSwitch() {
       {CHIPS.map((k) => (
         <button key={k.id} role="tab" aria-selected={k.id === type} className={k.id === type ? 'on' : ''} onClick={() => setType(k.id)}>
           {k.id === type && (
-            <motion.span layoutId="type-pill" className="type-pill" style={{ background: k.c.pack }} transition={{ type: 'spring', stiffness: 400, damping: 30 }} />
+            <motion.span layoutId="type-pill" className="type-pill" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />
           )}
           <svg viewBox="-24 -24 48 48" aria-hidden="true">
             <Chip type={k.id} c={k.c} />
@@ -53,10 +53,10 @@ function ProcessPinned({ t }) {
           <TypeSwitch />
           <ol className="proc-steps">
             <span className="proc-track" aria-hidden="true">
-              <motion.span className="proc-bar" style={{ scaleY: scrollYProgress, background: t.c.pack }} />
+              <motion.span className="proc-bar" style={{ scaleY: scrollYProgress }} />
             </span>
             {STEPS.map((x, i) => (
-              <li key={x.id} className={i === step ? 'on' : i < step ? 'done' : ''} style={{ '--accent': t.c.pack }}>
+              <li key={x.id} className={i === step ? 'on' : i < step ? 'done' : ''}>
                 <button onClick={() => goTo(i)} aria-current={i === step ? 'step' : undefined}>
                   <span className="ps-num">{pad(i)}</span>
                   {x.label}
@@ -85,7 +85,7 @@ function ProcessPinned({ t }) {
           <div className="proc-caption">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div key={s.id + t.id} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -14 }} transition={{ duration: 0.3 }}>
-                <span className="pc-num" style={{ color: t.c.packDark }}>
+                <span className="pc-num">
                   Step {step + 1} of {n} · {t.title}
                 </span>
                 <h3>{s.title}</h3>
@@ -109,7 +109,7 @@ function StepCard({ s, i, t }) {
         <Scene t={t} play={inView} />
       </div>
       <div className="pcard-body">
-        <span className="pc-num" style={{ color: t.c.packDark }}>
+        <span className="pc-num">
           {pad(i)} · {s.label}
         </span>
         <h3>{s.title}</h3>

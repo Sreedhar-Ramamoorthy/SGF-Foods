@@ -78,7 +78,7 @@ npm run dev
 | Group name, address, business list, colours, taglines | `sgf-landing/src/data/businesses.js` |
 | "About" text and the numbers (stats) | `sgf-landing/src/components/About.jsx` |
 | Foods company name, address, tagline | `sgf-food/src/data/company.js` |
-| Foods hero video (the one that zooms on scroll) | Put the file in `sgf-food/public/` (e.g. `hero.mp4`) and set `heroVideo: '/hero.mp4'` in `sgf-food/src/data/company.js`. Until then an animated montage plays. |
+| Foods hero "From Farm to Flavour" motion poster (7 video scenes, zooms on scroll) | Scene text and order: `sgf-food/src/data/poster.js`. Clips: `sgf-food/public/motion/` — replace a file with the client's own clip of the same name (720p, 6–9 s, no audio). Current clips are free Pexels stock footage. |
 | Chips (potato, banana, tapioca), their colours and the 8 life-cycle steps | `sgf-food/src/data/chips.js` |
 | Life-cycle illustrations | `sgf-food/src/components/art/` |
 | Page titles shown in the browser tab | `index.html` inside each folder |
